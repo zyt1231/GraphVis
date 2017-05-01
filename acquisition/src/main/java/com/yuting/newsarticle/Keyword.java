@@ -19,7 +19,7 @@ public class Keyword {
     @Column(name = "type")
     private String type;
 
-    @Column(name = "value")
+    @Column(name = "value", unique = true)
     private String value;
 
 //    @Column(name = "comment")
@@ -27,6 +27,11 @@ public class Keyword {
 
 
     public Keyword() {}
+
+    public Keyword(String type, String value) {
+        this.type = type;
+        this.value = value;
+    }
 
     public Integer getkId() {
         return kId;

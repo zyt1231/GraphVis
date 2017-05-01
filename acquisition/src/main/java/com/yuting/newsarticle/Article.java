@@ -31,7 +31,7 @@ public class Article {
     @Column(name = "web_url", length = 200)
     private String webUrl;
 
-    @Column(name = "snippet", length = 1000)
+    @Column(name = "snippet", length = 2000)
     private String snippet;
 
     @Column(name = "headline")
