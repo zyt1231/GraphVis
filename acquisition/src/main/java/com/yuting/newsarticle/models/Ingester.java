@@ -1,4 +1,4 @@
-package com.yuting.newsarticle;
+package com.yuting.newsarticle.models;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;

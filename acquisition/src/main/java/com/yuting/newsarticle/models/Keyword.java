@@ -1,4 +1,4 @@
-package com.yuting.newsarticle;
+package com.yuting.newsarticle.models;
 import jdk.nashorn.internal.objects.annotations.Getter;
 import jdk.nashorn.internal.objects.annotations.Setter;
 

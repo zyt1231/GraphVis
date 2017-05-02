@@ -1,7 +1,4 @@
-package com.yuting.newsarticle;
-
-import jdk.nashorn.internal.objects.annotations.Getter;
-import jdk.nashorn.internal.objects.annotations.Setter;
+package com.yuting.newsarticle.models;
 
 import javax.persistence.*;
 import java.util.Date;
