@@ -23,7 +23,8 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public Article findById(String id) {
-        String hql = String.format("from Article as a where a.articleId=123451234", id);
+//        String hql = String.format("from Article as a where 1=1", id);
+        String hql = "from Article as a where 1=1";
         List<Article> Articles = this.query(hql);
         return Articles.size() > 0 ? Articles.get(0) : null;
     }

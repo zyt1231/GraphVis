@@ -1,7 +1,10 @@
 package com.yuting.newsarticle.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 
@@ -34,10 +37,14 @@ public class Article {
     @Column(name = "headline")
     private String headLine;
 
-//    @OneToMany(mappedBy="id",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    @JoinTable(name = "article_keyword", joinColumns = { @JoinColumn(name = "article_id", nullable = false) }, inverseJoinColumns = { @JoinColumn(name = "keyword_id") })
+    //    @OneToMany(mappedBy="id",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(name = "article_keyword", joinColumns = {@JoinColumn(name = "article_id", nullable = false)}, inverseJoinColumns = {@JoinColumn(name = "keyword_id")})
     private Set<Keyword> keywords;
+
+    public Article() {
+    }
 
     public Article(String article_id) {
         this.articleId = article_id;

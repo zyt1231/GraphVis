@@ -1,22 +1,11 @@
-import com.yuting.newsarticle.Article;
-import org.hibernate.HibernateException;
-import org.hibernate.Metamodel;
-import org.hibernate.query.Query;
+import com.yuting.newsarticle.models.Article;
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.Transaction;
-
-
-import javax.persistence.metamodel.EntityType;
-import java.util.Map;
-import com.yuting.newsarticle.Keyword;
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import org.hibernate.cfg.AnnotationConfiguration;
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
+import com.yuting.newsarticle.models.Keyword;
+import org.hibernate.criterion.Restrictions;
 
 import java.util.Set;
 import java.util.HashSet;
@@ -49,12 +38,21 @@ public class Main {
             Keyword keyword2 = new Keyword();
             keyword2.setType("people");
             keyword2.setValue("Neil");
+            // get keyword
+            Criteria criteria = session.createCriteria(Keyword.class);
+            Keyword k = (Keyword)criteria.add(Restrictions.eq("value", "Neil")).uniqueResult();
+
+
+
+
             session.save(keyword);
              session.save(keyword2);
 
+             boolean contain = session.contains(keyword2);
+
 
             //create article
-            Article article = new Article("12345");
+            Article article = new Article("123451234");
             Set<Keyword> keywords = new HashSet<Keyword>();
             keywords.add(keyword);
             keywords.add(keyword2);
