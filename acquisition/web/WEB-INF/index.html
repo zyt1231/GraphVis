@@ -7,25 +7,25 @@
     <meta name="author" content="yuting">
     <title>News Article Network Visualization</title>
     <!-- custom css -->
-    <link href="../statics/custom.css" rel="stylesheet">
+    <link href="../statics/css/custom.css" rel="stylesheet">
     <!-- icon -->
     <script src="https://use.fontawesome.com/50407f4d4c.js"></script>
     <!-- jquery -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="../statics/js/jquery-3.2.1.min.js"></script>
     <!-- bootstrap -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="../statics/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
           integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <!-- network vis -->
-    <script type="text/javascript" src="../statics/js/dist/vis.min.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.19.1/vis.min.css" rel="stylesheet" type="text/css"/>
+    <script type="text/javascript" src="../statics/js/vis.min.js"></script>
+    <link href="../statics/css/vis.min.css" rel="stylesheet" type="text/css"/>
     <!-- date picker -->
-    <script src="../statics/vitalets-bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+    <script src="../statics/js/bootstrap-datepicker.js"></script>
+
 
 </head>
 
 <body>
-
 
 <!-- Static navbar -->
 <nav class="navbar navbar-default ">
@@ -126,37 +126,37 @@
     $("#datepickerto").datepicker();
 
 
-    //        $.getJSON("../network.json", function (json) {
-    //            console.log(json);
-    //            var nodes = new vis.DataSet(json['nodes']);
-    //            var edges = new vis.DataSet(json['edges']);
-    //            // create a Network
-    //            var container = document.getElementById('canvus');
-    //
-    //            // provide the data in the vis format
-    //            var data = {
-    //                nodes: nodes,
-    //                edges: edges
-    //            };
-    //            var options = {};
-    //
-    //            // initialize your Network!
-    //            var network = new vis.Network(container, data, options);
-    //        });
-    //
-    //
-    //        // create a Network
-    //        var container = document.getElementById('canvus');
-    //
-    //        // provide the data in the vis format
-    //        var data = {
-    //            nodes: nodes,
-    //            edges: edges
-    //        };
-    //        var options = {};
-    //
-    //        // initialize your Network!
-    //        var network = new vis.Network(container, data, options);
+            $.getJSON("../network.json", function (json) {
+                console.log(json);
+                var nodes = new vis.DataSet(json['nodes']);
+                var edges = new vis.DataSet(json['edges']);
+                // create a Network
+                var container = document.getElementById('canvus');
+
+                // provide the data in the vis format
+                var data = {
+                    nodes: nodes,
+                    edges: edges
+                };
+                var options = {};
+
+                // initialize your Network!
+                var network = new vis.Network(container, data, options);
+            });
+
+
+            // create a Network
+            var container = document.getElementById('canvus');
+
+            // provide the data in the vis format
+            var data = {
+                nodes: nodes,
+                edges: edges
+            };
+            var options = {};
+
+            // initialize your Network!
+            var network = new vis.Network(container, data, options);
 
 
 </script>
