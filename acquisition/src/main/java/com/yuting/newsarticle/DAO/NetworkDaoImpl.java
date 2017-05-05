@@ -7,10 +7,7 @@ import org.hibernate.cfg.Configuration;
 import org.junit.Test;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component("networkDao")
@@ -44,9 +41,8 @@ public class NetworkDaoImpl implements NetworkDao {
     @Override
     public Network generateNetwork(String hql) {
         List<Object> articles;
-        List<String> article_ids;
-        Set<Node> nodes = new HashSet<Node>();
         Set<Edge> edges = new HashSet<Edge>();
+        Map<String,Node> mNodes = new HashMap<String,Node>();
         Set<Keyword> keywords;
         //Todo remove hardcode hql
         hql = "from Article where pubDate = '2017-01-01'";
@@ -59,17 +55,20 @@ public class NetworkDaoImpl implements NetworkDao {
             String aId = ((Article) article).getArticleId();
             String headline = ((Article) article).getHeadLine();
             Node aN = new Node(aId, headline, groupA);
-            nodes.add(aN);
+//            nodes.add(aN);
+            mNodes.put(aId, aN);
             keywords = ((Article) article).getKeywords();
             for (Keyword keyword : keywords) {
                 String kId = Integer.toString(keyword.getkId());
                 Node kN = new Node(kId, keyword.getValue(), groupK);
-                nodes.add(kN);
+                mNodes.put(kId, kN);
                 // generate edges
                 Edge edge = new Edge(aId, kId, "");
                 edges.add(edge);
             }
         }
+        // remove dups
+        Set<Node> nodes = new HashSet<>(mNodes.values());
         return (new Network(nodes, edges));
 
     }
