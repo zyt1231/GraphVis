@@ -12,22 +12,34 @@
     <script src="https://use.fontawesome.com/50407f4d4c.js"></script>
     <!-- jquery -->
     <script src="../statics/js/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
+
     <!-- bootstrap -->
     <script src="../statics/js/bootstrap.min.js"></script>
+    <!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>-->
+    <!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"-->
+    <!--integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"-->
+    <!--crossorigin="anonymous"></script>-->
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
           integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <!-- network vis -->
     <script type="text/javascript" src="../statics/js/vis.min.js"></script>
+
     <link href="../statics/css/vis.min.css" rel="stylesheet" type="text/css"/>
     <!-- date picker -->
     <script src="../statics/js/bootstrap-datepicker.js"></script>
+    <!-- google chart -->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <!-- dynatable -->
+    <script type="text/javascript" src="../statics/js/jquery.dynatable.js"></script>
+    <link href="../statics/css/jquery.dynatable.css" rel="stylesheet" type="text/css"/>
 
 
 </head>
 
 <body>
 
-<!-- Static navbar -->
 <nav class="navbar navbar-default ">
     <div class="container">
         <div class="navbar-header">
@@ -38,7 +50,6 @@
         </div>
     </div>
 </nav>
-
 
 <div class="container">
 
@@ -81,85 +92,58 @@
                         <h4 class="panel-title">
                             <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">
                                 <i class="fa fa-bar-chart" aria-hidden="true"></i>
-                                &nbsp;Metrics</a>
+                                &nbsp;Nodes</a>
+
                         </h4>
                     </div>
                     <div id="collapse2" class="panel-collapse collapse">
-                        <div class="panel-body">Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-                            sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                        <div class="panel-body">
+                            <table class="table-responsive" id="nodeTable"></table>
+
                         </div>
                     </div>
                 </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse3">Collapsible Group 3</a>
-                        </h4>
-                    </div>
-                    <div id="collapse3" class="panel-collapse collapse">
-                        <div class="panel-body">Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-                            sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-
-            <div class="col-md-9" id="canvus" style="height:500px;">
             </div>
         </div>
+
+        <div class="col-md-9">
+            <div class="row">
+                <div class="btn-group pull-right">
+                    <button class="btn btn-success btn-xs">Visualization</button>
+                    <button class="btn btn-success btn-xs">Chart</button>
+                    <button class="btn btn-success btn-xs">Table</button>
+                </div>
+            </div>
+            <div class="row">
+                <br>
+                <div id="canvasNetwork" style="height:500px;"></div>
+                <div id="canvasChart"></div>
+                <div id="canvasTable">
+                    <!--<table id="nwTable" class="table">-->
+                    <!--</table>-->
+                </div>
+            </div>
+
+
+
+        </div>
+
     </div>
+
 
     <hr>
     <footer>
         <p>&copy; Yuting Zhou 2017</p>
-        <div id="dp6" data-date="12-02-2012" data-date-format="dd-mm-yyyy"></div>
-
     </footer>
+
+
+    <div id="curve_chart" style="width: 900px; height: 500px"></div>
+
 </div>
+<script src="utils.js"></script>
+<script src="main.js"></script>
 
-
-<script>
-    $("#datepickerfrom").datepicker();
-    $("#datepickerto").datepicker();
-
-
-            $.getJSON("../network.json", function (json) {
-                console.log(json);
-                var nodes = new vis.DataSet(json['nodes']);
-                var edges = new vis.DataSet(json['edges']);
-                // create a Network
-                var container = document.getElementById('canvus');
-
-                // provide the data in the vis format
-                var data = {
-                    nodes: nodes,
-                    edges: edges
-                };
-                var options = {};
-
-                // initialize your Network!
-                var network = new vis.Network(container, data, options);
-            });
-
-
-            // create a Network
-            var container = document.getElementById('canvus');
-
-            // provide the data in the vis format
-            var data = {
-                nodes: nodes,
-                edges: edges
-            };
-            var options = {};
-
-            // initialize your Network!
-            var network = new vis.Network(container, data, options);
-
-
-</script>
 
 </body>
 </html>

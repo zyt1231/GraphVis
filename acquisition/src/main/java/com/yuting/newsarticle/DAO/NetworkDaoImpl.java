@@ -54,13 +54,14 @@ public class NetworkDaoImpl implements NetworkDao {
             String groupA = "A";
             String aId = ((Article) article).getArticleId();
             String headline = ((Article) article).getHeadLine();
-            Node aN = new Node(aId, headline, groupA);
+            String type = "article";
+            Node aN = new Node(aId, headline, groupA, type);
 //            nodes.add(aN);
             mNodes.put(aId, aN);
             keywords = ((Article) article).getKeywords();
             for (Keyword keyword : keywords) {
                 String kId = Integer.toString(keyword.getkId());
-                Node kN = new Node(kId, keyword.getValue(), groupK);
+                Node kN = new Node(kId, keyword.getValue(), groupK, keyword.getType());
                 mNodes.put(kId, kN);
                 // generate edges
                 Edge edge = new Edge(aId, kId, "");

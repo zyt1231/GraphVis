@@ -1,33 +1,122 @@
-/**
- * Created by Ting on 5/4/17.
- */
-
-// create an array with nodes
-var nodes = new vis.DataSet([
-    {id: 1, label: 'Node 1'},
-    {id: 2, label: 'Node 2'},
-    {id: 3, label: 'Node 3'},
-    {id: 4, label: 'Node 4'},
-    {id: 5, label: 'Node 5'}
-]);
-
-// create an array with edges
-var edges = new vis.DataSet([
-    {from: 1, to: 3},
-    {from: 1, to: 2},
-    {from: 2, to: 4},
-    {from: 2, to: 5}
-]);
-
-// create a Network
-var container = document.getElementById('canvus');
-
-// provide the data in the vis format
-var data = {
-    nodes: nodes,
-    edges: edges
+var App = function () {
+    this.init();
 };
-var options = {};
 
-// initialize your Network!
-var network = new vis.Network(container, data, options);
+App.prototype.visualize = function (json) {
+    var nodes = new vis.DataSet(json['nodes']);
+    var edges = new vis.DataSet(json['edges']);
+    // create a Network
+    var container = document.getElementById("canvasNetwork");
+    // provide the data in the vis format
+    var data = {
+        nodes: nodes,
+        edges: edges
+    };
+    var options = {};
+    // initialize your Network!
+    var network = new vis.Network(container, data, options);
+};
+
+App.prototype.chart = function () {
+    $('#canvasNetwork').height(0);
+    $('#canvasTable').height(0);
+    $('#canvasChart').height(500);
+
+    google.charts.load('current', {'packages': ['corechart']});
+    google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+            ['Date', 'Trump, Donald J', 'Syria', 'United States Politics and Government'],
+            ['2017-01-01', 8, 1, 9],
+            ['2017-01-02', 9, 2, 4],
+            ['2017-01-03', 15, 3, 10],
+            ['2017-01-04', 4, 1, 5]
+        ]);
+
+        var options = {
+            title: 'Keyword Frequency',
+            curveType: 'function',
+            legend: {position: 'bottom'}
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('canvasChart'));
+
+        chart.draw(data, options);
+    }
+};
+
+App.prototype.getKeywordMap = function (json) {
+    var edges = json['edges'];
+    var nodes = json['nodes'];
+    var nodeMap = new Object();
+    var edgeMap = new Object();
+
+    //build node map
+    nodes.forEach(function (item) {
+        item['verticalDegree']=0;
+        nodeMap[item['id']] = item;
+    });
+    var add = function (key) {
+        if (key != null) {
+            (nodeMap[key])['verticalDegree'] += 1;
+        }
+    };
+    //count vertical degree
+    edges.forEach(function (item) {
+        var fromId = item['from'];
+        var toId = item['to'];
+        add(fromId);
+        add(toId);
+    });
+    //keyword map
+    var kwMap = new Object();
+    for(var key in nodeMap){
+        if((nodeMap[key])['group']=='K'){
+            kwMap[nodeMap[key]['label']] = nodeMap[key]['verticalDegree'];
+        }
+    }
+
+    App.prototype.KeywordTable = sortOnValues(kwMap);
+    //create checkbox list
+    $.each(App.prototype.KeywordTable, function (i) {
+        var listItem = $('<tr>').append($('<td><input type="checkbox">'+App.prototype.KeywordTable[i][0]+'</input></td><td><span class="badge">'+App.prototype.KeywordTable[i][1]+'</span></td>'));
+        $('#nodeTable').append(listItem);
+    });
+
+    //add verticaldegree field to nodes
+    for(i=0;i<nodes.length;i++){
+        var id = nodes[i]['id'];
+        nodes[i]['verticalDegree']=nodeMap[id]['verticalDegree'];
+    }
+    json['nodes'] = nodes;
+    return json;
+};
+
+App.prototype.table = function (json) {
+    $('#canvasNetwork').height(0);
+    $('#canvasChart').height(0);
+    $('#canvasTable').append($('<table id="nwTable" class="table"><thead><tr class="bg-primary"><th>Label</th><th>Type</th><th>VerticalDegree</th></tr></thead><tbody></tbody></table>'))
+    $('#nwTable').dynatable({
+        dataset: {
+            records: json['nodes']
+        }
+    });
+};
+
+App.prototype.init = function () {
+    $("#datepickerfrom").datepicker();
+    $("#datepickerto").datepicker();
+    $.getJSON("../network.json", function (json) {
+        // App.prototype.visualize(json);
+        json = App.prototype.getKeywordMap(json);
+        // App.prototype.chart();
+        App.prototype.table(json);
+        App.prototype.json = json;
+    });
+};
+
+//main
+app = new App();
+
+

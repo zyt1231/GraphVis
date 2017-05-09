@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!-- jquery -->
+    <script src="../statics/js/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
+
+
+    <!-- bootstrap -->
+    <script src="../statics/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- dynatable -->
+    <script type="text/javascript" src="../statics/js/jquery.dynatable.js"></script>
+    <link href="../statics/css/jquery.dynatable.css" rel="stylesheet" type="text/css"/>
+
+</head>
+<body>
+<table id="my-final-table" class="table">
+    <thead class="">
+    <tr class="bg-primary">
+        <th class="">Band</th>
+        <th>Song</th>
+        <th>Test</th>
+    </tr>
+
+
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+<script>
+
+    var myRecords = {
+        "records": [
+            {
+                "band": "Weezer",
+                "song": "El Scorcho"
+            },
+            {
+                "band": "Chevelle",
+                "song": "Family System"
+            }
+        ],
+//        "queryRecordCount": 2,
+//        "totalRecordCount": 3
+    };
+
+    $('#my-final-table').dynatable({
+        dataset: {
+            records: myRecords.records
+        }
+    });
+</script>
+</body>
+</html>

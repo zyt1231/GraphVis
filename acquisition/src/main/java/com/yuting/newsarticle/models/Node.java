@@ -7,14 +7,24 @@ public class Node {
     private String id;
     private String label;
     private String group;
+    private String type;
 
     public Node() {
     }
 
-    public Node(String id, String label, String group) {
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public Node(String id, String label, String group, String type) {
         this.id = id;
         this.label = label;
         this.group = group;
+        this.type = type;
     }
 
     public String getId() {
