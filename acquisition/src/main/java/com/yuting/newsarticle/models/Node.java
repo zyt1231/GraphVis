@@ -8,8 +8,17 @@ public class Node {
     private String label;
     private String group;
     private String type;
+    private String pubDate;
 
     public Node() {
+    }
+
+    public Node(String id, String label, String group, String type, String pubDate) {
+        this.id = id;
+        this.label = label;
+        this.group = group;
+        this.type = type;
+        this.pubDate = pubDate;
     }
 
     public String getType() {
@@ -20,12 +29,6 @@ public class Node {
         this.type = type;
     }
 
-    public Node(String id, String label, String group, String type) {
-        this.id = id;
-        this.label = label;
-        this.group = group;
-        this.type = type;
-    }
 
     public String getId() {
         return id;
@@ -49,5 +52,13 @@ public class Node {
 
     public void setGroup(String group) {
         this.group = group;
+    }
+
+    public String getPubDate() {
+        return pubDate;
+    }
+
+    public void setPubDate(String pubDate) {
+        this.pubDate = pubDate;
     }
 }

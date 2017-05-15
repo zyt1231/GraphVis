@@ -1,4 +1,5 @@
 package com.yuting.newsarticle.DAO;
+
 import com.yuting.newsarticle.models.*;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -7,12 +8,14 @@ import org.hibernate.cfg.Configuration;
 import org.junit.Test;
 import org.springframework.stereotype.Component;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Component("networkDao")
 public class NetworkDaoImpl implements NetworkDao {
     private static SessionFactory sessionFactory;
+
     static {
         try {
             sessionFactory = new Configuration().configure().buildSessionFactory();
@@ -22,9 +25,11 @@ public class NetworkDaoImpl implements NetworkDao {
         }
 
     }
+
     private Session getCurrentSession() {
         return sessionFactory.getCurrentSession();
     }
+
     @Override
     public List<Object> query(String hql) {
         try {
@@ -33,7 +38,7 @@ public class NetworkDaoImpl implements NetworkDao {
             Query query = session.createQuery(hql);
             List results = query.list();
             return results;
-        }finally {
+        } finally {
             this.getCurrentSession().close();
         }
     }
@@ -42,26 +47,23 @@ public class NetworkDaoImpl implements NetworkDao {
     public Network generateNetwork(String hql) {
         List<Object> articles;
         Set<Edge> edges = new HashSet<Edge>();
-        Map<String,Node> mNodes = new HashMap<String,Node>();
+        Map<String, Node> mNodes = new HashMap<String, Node>();
         Set<Keyword> keywords;
-        //Todo remove hardcode hql
-        hql = "from Article where pubDate = '2017-01-01'";
         articles = query(hql);
-//        article_ids =  articles.stream().map((Object obj)-> ((Article)obj).getArticleId()).collect(Collectors.toList());
         for (Object article : articles) {
             //generate nodes
             String groupK = "K";
             String groupA = "A";
             String aId = ((Article) article).getArticleId();
             String headline = ((Article) article).getHeadLine();
+            String pubDate = ((Article) article).getPubDate().toString();
             String type = "article";
-            Node aN = new Node(aId, headline, groupA, type);
-//            nodes.add(aN);
+            Node aN = new Node(aId, headline, groupA, type, pubDate);
             mNodes.put(aId, aN);
             keywords = ((Article) article).getKeywords();
             for (Keyword keyword : keywords) {
                 String kId = Integer.toString(keyword.getkId());
-                Node kN = new Node(kId, keyword.getValue(), groupK, keyword.getType());
+                Node kN = new Node(kId, keyword.getValue(), groupK, keyword.getType(), pubDate);
                 mNodes.put(kId, kN);
                 // generate edges
                 Edge edge = new Edge(aId, kId, "");
@@ -74,39 +76,13 @@ public class NetworkDaoImpl implements NetworkDao {
 
     }
 
-//    @Test
-//    public void NetworkDaoTest() {
-//        List<Object> articles;
-//        List<String> article_ids;
-//        Set<Node> nodes = new HashSet<Node>();
-//        Set<Edge> edges = new HashSet<Edge>();
-//        Set<Keyword> keywords;
-//        String hql = "from Article where pubDate = '2017-01-01'";
-//
-//
-//        articles = query(hql);
-////        article_ids =  articles.stream().map((Object obj)-> ((Article)obj).getArticleId()).collect(Collectors.toList());
-//        for (Object article : articles) {
-//            //generate nodes
-//            String groupK = "K";
-//            String groupA = "A";
-//            String aId = ((Article)article).getArticleId();
-//            String headline = ((Article) article).getHeadLine();
-//            Node aN = new Node(aId, headline, groupA);
-//            nodes.add(aN);
-//            keywords = ((Article)article).getKeywords();
-//            for (Keyword keyword : keywords) {
-//                String kId = Integer.toString(keyword.getkId());
-//                Node kN = new Node(kId, keyword.getValue(), groupK);
-//                nodes.add(kN);
-//                // generate edges
-//                Edge edge = new Edge(aId, kId, "");
-//                edges.add(edge);
-//            }
-//        }
-//        for (Node node : nodes) {
-//            System.out.println(node.getLabel());
-//        }
-//        System.out.println();
-//    }
+    @Test
+    public void NetworkDaoTest() {
+        String from = "2017-01-01";
+        String to = "2017-01-02";
+        String hql = "from Article where pubDate between '" + from + "' and '" + to + "'";
+        Network nw = this.generateNetwork(hql);
+        System.out.println(nw);
+    }
+
 }

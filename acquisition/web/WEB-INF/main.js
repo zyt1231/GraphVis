@@ -3,6 +3,9 @@ var App = function () {
 };
 
 App.prototype.visualize = function (json) {
+    // $('#canvasNetwork').height(500);
+    // $('#canvasChart').height(0);
+    // $('#canvasTable').height(0);
     var nodes = new vis.DataSet(json['nodes']);
     var edges = new vis.DataSet(json['edges']);
     // create a Network
@@ -18,10 +21,8 @@ App.prototype.visualize = function (json) {
 };
 
 App.prototype.chart = function () {
-    $('#canvasNetwork').height(0);
-    $('#canvasTable').height(0);
     $('#canvasChart').height(500);
-
+    $('#canvasChart').hide();
     google.charts.load('current', {'packages': ['corechart']});
     google.charts.setOnLoadCallback(drawChart);
 
@@ -94,8 +95,7 @@ App.prototype.getKeywordMap = function (json) {
 };
 
 App.prototype.table = function (json) {
-    $('#canvasNetwork').height(0);
-    $('#canvasChart').height(0);
+    $('#canvasTable').hide();
     $('#canvasTable').append($('<table id="nwTable" class="table"><thead><tr class="bg-primary"><th>Label</th><th>Type</th><th>VerticalDegree</th></tr></thead><tbody></tbody></table>'))
     $('#nwTable').dynatable({
         dataset: {
@@ -107,12 +107,30 @@ App.prototype.table = function (json) {
 App.prototype.init = function () {
     $("#datepickerfrom").datepicker();
     $("#datepickerto").datepicker();
-    $.getJSON("../network.json", function (json) {
-        // App.prototype.visualize(json);
-        json = App.prototype.getKeywordMap(json);
-        // App.prototype.chart();
-        App.prototype.table(json);
+
+    $.getJSON("http://localhost:8080/network?from=2017-01-01&to=2017-01-03", function (json) {
         App.prototype.json = json;
+        App.prototype.visualize(json);
+        json = App.prototype.getKeywordMap(json);
+        App.prototype.chart();
+        App.prototype.table(json);
+
+    });
+    $("#visualizationBtn").click(function () {
+        $('#canvasNetwork').show();
+        $('#canvasChart').hide();
+        $('#canvasTable').hide();
+    });
+    $("#chartBtn").click(function () {
+        $('#canvasChart').height(500);
+        $('#canvasTable').hide();
+        $('#canvasChart').show();
+        $('#canvasNetwork').hide();
+    });
+    $("#tableBtn").click(function () {
+        $('#canvasTable').show();
+        $('#canvasChart').hide();
+        $('#canvasNetwork').hide();
     });
 };
 
