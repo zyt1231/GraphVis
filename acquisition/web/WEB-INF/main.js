@@ -3,9 +3,6 @@ var App = function () {
 };
 
 App.prototype.visualize = function (json) {
-    // $('#canvasNetwork').height(500);
-    // $('#canvasChart').height(0);
-    // $('#canvasTable').height(0);
     var nodes = new vis.DataSet(json['nodes']);
     var edges = new vis.DataSet(json['edges']);
     // create a Network
@@ -15,13 +12,17 @@ App.prototype.visualize = function (json) {
         nodes: nodes,
         edges: edges
     };
-    var options = {};
+    var options = {
+        layout: {
+            improvedLayout: false
+        }
+    };
     // initialize your Network!
     var network = new vis.Network(container, data, options);
 };
 
-App.prototype.chart = function () {
-    $('#canvasChart').height(500);
+App.prototype.chart = function (json) {
+    // $('#canvasChart').height(500);
     $('#canvasChart').hide();
     google.charts.load('current', {'packages': ['corechart']});
     google.charts.setOnLoadCallback(drawChart);
@@ -40,9 +41,7 @@ App.prototype.chart = function () {
             curveType: 'function',
             legend: {position: 'bottom'}
         };
-
         var chart = new google.visualization.LineChart(document.getElementById('canvasChart'));
-
         chart.draw(data, options);
     }
 };
@@ -55,7 +54,7 @@ App.prototype.getKeywordMap = function (json) {
 
     //build node map
     nodes.forEach(function (item) {
-        item['verticalDegree']=0;
+        item['verticalDegree'] = 0;
         nodeMap[item['id']] = item;
     });
     var add = function (key) {
@@ -72,8 +71,8 @@ App.prototype.getKeywordMap = function (json) {
     });
     //keyword map
     var kwMap = new Object();
-    for(var key in nodeMap){
-        if((nodeMap[key])['group']=='K'){
+    for (var key in nodeMap) {
+        if ((nodeMap[key])['group'] == 'K') {
             kwMap[nodeMap[key]['label']] = nodeMap[key]['verticalDegree'];
         }
     }
@@ -81,14 +80,14 @@ App.prototype.getKeywordMap = function (json) {
     App.prototype.KeywordTable = sortOnValues(kwMap);
     //create checkbox list
     $.each(App.prototype.KeywordTable, function (i) {
-        var listItem = $('<tr>').append($('<td><input type="checkbox">'+App.prototype.KeywordTable[i][0]+'</input></td><td><span class="badge">'+App.prototype.KeywordTable[i][1]+'</span></td>'));
+        var listItem = $('<tr>').append($('<td><input type="checkbox">' + App.prototype.KeywordTable[i][0] + '</input></td><td><span class="badge">' + App.prototype.KeywordTable[i][1] + '</span></td>'));
         $('#nodeTable').append(listItem);
     });
 
     //add verticaldegree field to nodes
-    for(i=0;i<nodes.length;i++){
+    for (i = 0; i < nodes.length; i++) {
         var id = nodes[i]['id'];
-        nodes[i]['verticalDegree']=nodeMap[id]['verticalDegree'];
+        nodes[i]['verticalDegree'] = nodeMap[id]['verticalDegree'];
     }
     json['nodes'] = nodes;
     return json;
@@ -107,15 +106,22 @@ App.prototype.table = function (json) {
 App.prototype.init = function () {
     $("#datepickerfrom").datepicker();
     $("#datepickerto").datepicker();
+    $("#dateBtn").click(function () {
+        var fromDate = $("#datepickerfrom").val();
+        var toDate = $("#datepickerto").val();
 
-    $.getJSON("http://localhost:8080/network?from=2017-01-01&to=2017-01-03", function (json) {
-        App.prototype.json = json;
-        App.prototype.visualize(json);
-        json = App.prototype.getKeywordMap(json);
-        App.prototype.chart();
-        App.prototype.table(json);
+        $.getJSON("http://localhost:8080/network?from=" + fromDate + "&to=" + toDate + "", function (json) {
+            App.prototype.json = json;
+            App.prototype.visualize(json);
+            $('#canvasNetwork').height(500);
+            $('#canvasNetwork').show();
 
+            json = App.prototype.getKeywordMap(json);
+            App.prototype.chart();
+            App.prototype.table(json);
+        });
     });
+
     $("#visualizationBtn").click(function () {
         $('#canvasNetwork').show();
         $('#canvasChart').hide();

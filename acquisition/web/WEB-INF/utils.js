@@ -11,6 +11,8 @@ function sortOnValues(dict) {
     });
 
 // Create a new array with only the first 5 items
-    console.log(items.slice(0, 10));
-    return items.slice(0, 10);
+//     console.log(items.slice(0, 10));
+//     return items.slice(0, 10);
+    console.log(items.length);
+    return items;
 }
