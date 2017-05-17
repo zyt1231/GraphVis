@@ -22,28 +22,54 @@ App.prototype.visualize = function (json) {
 };
 
 App.prototype.chart = function (json) {
-    // $('#canvasChart').height(500);
-    $('#canvasChart').hide();
+    App.prototype.keywordArray= [];
+    //header
+    var row = ["Date"]
+    row = row.concat(App.prototype.keywords);
+    App.prototype.keywordArray.push(row);
+
+    //rows
+    for (var date in json) {
+        var row = [date];
+
+        var keywordsOnDateMap = json[date];
+        App.prototype.keywords.forEach(function (item) {
+            var ct = 0;
+            //each keyword
+            for (var keyword in keywordsOnDateMap) {
+                // console.log(keyword + "|" + item.data + (keyword == item.data));
+                if (keyword == item) {
+                    ct = keywordsOnDateMap[keyword];
+                    break;
+                }
+            }
+            row.push(ct);
+        })
+        App.prototype.keywordArray.push(row);
+    }
+
+
+    $('#canvasChart').height(500);
+    $('#canvasTable').hide();
+    $('#canvasChart').show();
+    $('#canvasNetwork').hide();
+
     google.charts.load('current', {'packages': ['corechart']});
     google.charts.setOnLoadCallback(drawChart);
 
     function drawChart() {
-        var data = google.visualization.arrayToDataTable([
-            ['Date', 'Trump, Donald J', 'Syria', 'United States Politics and Government'],
-            ['2017-01-01', 8, 1, 9],
-            ['2017-01-02', 9, 2, 4],
-            ['2017-01-03', 15, 3, 10],
-            ['2017-01-04', 4, 1, 5]
-        ]);
-
+        var data = google.visualization.arrayToDataTable(App.prototype.keywordArray);
         var options = {
             title: 'Keyword Frequency',
             curveType: 'function',
+            width:1000,
+            heigh:500,
             legend: {position: 'bottom'}
         };
         var chart = new google.visualization.LineChart(document.getElementById('canvasChart'));
         chart.draw(data, options);
     }
+
 };
 
 App.prototype.getKeywordMap = function (json) {
@@ -106,20 +132,31 @@ App.prototype.table = function (json) {
 App.prototype.init = function () {
     $("#datepickerfrom").datepicker();
     $("#datepickerto").datepicker();
+
+
     $("#dateBtn").click(function () {
         var fromDate = $("#datepickerfrom").val();
         var toDate = $("#datepickerto").val();
+        $("#nodeTable").empty();
+        $('#canvasTable').empty();
+        App.prototype.json = {};
+        App.prototype.jsonArticle = {};
+        App.prototype.KEYWORDLIMIT = 5;
+        App.prototype.KeywordTable = [];
+        App.prototype.keywordArray= [];
 
         $.getJSON("http://localhost:8080/network?from=" + fromDate + "&to=" + toDate + "", function (json) {
             App.prototype.json = json;
             App.prototype.visualize(json);
             $('#canvasNetwork').height(500);
             $('#canvasNetwork').show();
-
             json = App.prototype.getKeywordMap(json);
-            App.prototype.chart();
             App.prototype.table(json);
         });
+        $.getJSON("http://localhost:8080/articles?from=" + fromDate + "&to=" + toDate + "", function (json) {
+            App.prototype.jsonArticle = json;
+        });
+
     });
 
     $("#visualizationBtn").click(function () {
@@ -138,6 +175,14 @@ App.prototype.init = function () {
         $('#canvasChart').hide();
         $('#canvasNetwork').hide();
     });
+    $("#keywordBtn").click(function () {
+        App.prototype.keywords = [];
+        var selectedKeywords = $("input:checked");
+        for (var i = 0; i < Math.min(App.prototype.KEYWORDLIMIT, selectedKeywords.length); i++) {
+            App.prototype.keywords.push(selectedKeywords[i].nextSibling.data);
+        }
+        App.prototype.chart(App.prototype.jsonArticle);
+    })
 };
 
 //main
